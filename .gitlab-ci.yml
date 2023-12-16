@@ -20,32 +20,31 @@ default:
   image: rust:latest
 
 stages:          # List of stages for jobs, and their order of execution
-  - pre-build
-  - build
   - test
   - deploy
-  - post-build
 
 reformat-job:
-  stage: pre-build
+  stage: .pre
   script:
+    - rustup component add rustfmt
     - cargo fmt -- --check
-
-build-job:       # This job runs in the build stage, which runs first.
-  stage: build
-  script:
-    - cargo build
 
 unit-test-job:   # This job runs in the test stage.
   stage: test    # It only starts when the job in the build stage completes successfully.
   script:
     - cargo test
-    - cargo tarpaulin --ignore-tests
 
 lint-test-job:   # This job also runs in the test stage.
   stage: test    # It can run at the same time as unit-test-job (in parallel).
   script:
+    - rustup component add clippy
     - cargo clippy -- -D warnings
+
+coverage-test-job:
+  stage: test
+  script:
+    - cargo install cargo-tarpaulin
+    - cargo tarpaulin --ignore-tests
 
 deploy-job:      # This job runs in the deploy stage.
   stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
@@ -57,5 +56,6 @@ deploy-job:      # This job runs in the deploy stage.
 vulnerability-check-job:
   stage: post-build
   script:
+    - cargo install cargo-audit
     - cargo audit
 
