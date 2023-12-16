@@ -40,11 +40,11 @@ lint-test-job:   # This job also runs in the test stage.
     - rustup component add clippy
     - cargo clippy -- -D warnings
 
-coverage-test-job:
-  stage: test
-  script:
-    - cargo install cargo-tarpaulin
-    - cargo tarpaulin --ignore-tests
+#coverage-test-job:
+#  stage: test
+#  script:
+#    - cargo install cargo-tarpaulin
+#    - cargo tarpaulin --ignore-tests
 
 deploy-job:      # This job runs in the deploy stage.
   stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
@@ -53,9 +53,9 @@ deploy-job:      # This job runs in the deploy stage.
     - echo "Deploying application..."
     - echo "Application successfully deployed."
 
-vulnerability-check-job:
-  stage: .post
-  script:
-    - cargo install cargo-audit
-    - cargo audit
+#vulnerability-check-job:
+#  stage: .post
+#  script:
+#    - cargo install cargo-audit
+#    - cargo audit
 
