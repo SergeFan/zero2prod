@@ -54,7 +54,7 @@ deploy-job:      # This job runs in the deploy stage.
     - echo "Application successfully deployed."
 
 vulnerability-check-job:
-  stage: post-build
+  stage: .post
   script:
     - cargo install cargo-audit
     - cargo audit
