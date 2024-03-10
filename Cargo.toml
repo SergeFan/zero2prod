@@ -9,8 +9,22 @@ edition = "2021"
 rustflags = ["-C", "linker=clang", "-C", "link-arg=-fuse-ld=mold"]
 
 [dependencies]
-actix-web = "4.4"
-tokio = { version = "1.35.0", features = ["macros", "rt-multi-thread"] }
+config = "0.14"
+actix-web = "4.5"
+tokio = { version = "1.36.0", features = ["macros", "rt-multi-thread"] }
+serde = { version = "1.0", features = ["derive"] }
+
+[dependencies.sqlx]
+version = "0.7"
+default-features = false
+features = [
+    "runtime-tokio-rustls",
+    "macros",
+    "postgres",
+    "uuid",
+    "chrono",
+    "migrate"
+]
 
 [dev-dependencies]
 reqwest = "0.11"
