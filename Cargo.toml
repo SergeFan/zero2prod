@@ -9,10 +9,12 @@ edition = "2021"
 rustflags = ["-C", "linker=clang", "-C", "link-arg=-fuse-ld=mold"]
 
 [dependencies]
-config = "0.14"
 actix-web = "4.5"
-tokio = { version = "1.36.0", features = ["macros", "rt-multi-thread"] }
+chrono = { version = "0.4", default-features = false, features = ["clock"] }
+config = "0.14"
 serde = { version = "1.0", features = ["derive"] }
+tokio = { version = "1.36.0", features = ["macros", "rt-multi-thread"] }
+uuid = { version = "1", features = ["v4"] }
 
 [dependencies.sqlx]
 version = "0.7"
