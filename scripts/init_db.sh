@@ -45,23 +45,22 @@ fi
 
 # Keep pinging Postgres until it's ready to accept commands
 export PGPASSWORD="${DB_PASSWORD}"
-until
-  if [ -z "${CI_PIPELINE}" ]
-  then
-    psql -h "${DB_HOST}" -U "${DB_USER}" -p "${DB_PORT}" -d "postgres" -c '\q'
-  fi
-do
-  >&2 echo "Postgres is still unavailable - sleeping"
-  sleep 1
-done
-
+if [ -z "${CI_PIPELINE}" ]
+then
+  until
+      psql -h "${DB_HOST}" -U "${DB_USER}" -p "${DB_PORT}" -d "postgres" -c '\q'
+  do
+    >&2 echo "Postgres is still unavailable - sleeping"
+    sleep 1
+  done
 >&2 echo "Postgres is up and running on port ${DB_PORT}!"
+fi
 
 if [ -z "${CI_PIPELINE}" ]
 then
   DATABASE_URL=postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}
 else
-  DATABASE_URL=postgres://runner@postgres/${DB_NAME}
+  DATABASE_URL=postgres://${DB_USER}:${DB_PASSWORD}@postgres/${DB_NAME}
 fi
 export DATABASE_URL
 
