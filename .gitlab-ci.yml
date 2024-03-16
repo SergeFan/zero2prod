@@ -27,6 +27,7 @@ variables:
   POSTGRES_PASSWORD: password
   POSTGRES_DB: newsletter
   POSTGRES_PORT: 5432
+  DATABASE_URL: "postgres://$POSTGRES_USER:$POSTGRES_PASSWORD@$POSTGRES_HOST:$POSTGRES_PORT_PORT/$POSTGRES_DB"
   Z2P__DATABASE__HOST: $POSTGRES_HOST
 
 stages: # List of stages for jobs, and their order of execution
