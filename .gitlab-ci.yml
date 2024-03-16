@@ -18,8 +18,18 @@
 
 default:
   image: rust:latest
+  services:
+    - postgres:14
 
-stages:          # List of stages for jobs, and their order of execution
+variables:
+  POSTGRES_DB: postgres
+  POSTGRES_USER: postgres
+  POSTGRES_PASSWORD: password
+  POSTGRES_HOST_AUTH_METHOD: trust
+  SQLX_VERSION: 0.7.4
+  SQLX_FEATURES: "rustls, postgres"
+
+stages: # List of stages for jobs, and their order of execution
   - test
   - deploy
 
@@ -29,12 +39,14 @@ reformat-job:
     - rustup component add rustfmt
     - cargo fmt -- --check
 
-unit-test-job:   # This job runs in the test stage.
+unit-test-job: # This job runs in the test stage.
   stage: test    # It only starts when the job in the build stage completes successfully.
   script:
+    - cargo install sqlx-cli --version=$SQLX_VERSION --features $SQLX_FEATURES --no-default-features --locked
+    - SKIP_DOCKER=true ./scripts/init_db.sh
     - cargo test
 
-lint-test-job:   # This job also runs in the test stage.
+lint-test-job: # This job also runs in the test stage.
   stage: test    # It can run at the same time as unit-test-job (in parallel).
   script:
     - rustup component add clippy
@@ -46,7 +58,7 @@ lint-test-job:   # This job also runs in the test stage.
 #    - cargo install cargo-tarpaulin
 #    - cargo tarpaulin --ignore-tests
 
-deploy-job:      # This job runs in the deploy stage.
+deploy-job: # This job runs in the deploy stage.
   stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
   environment: production
   script:
