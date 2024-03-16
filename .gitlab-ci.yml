@@ -43,6 +43,7 @@ unit-test-job: # This job runs in the test stage.
   stage: test    # It only starts when the job in the build stage completes successfully.
   script:
     - cargo install sqlx-cli --version=$SQLX_VERSION --features $SQLX_FEATURES --no-default-features --locked
+    - apt-get update && apt-get install -y postgresql postgresql-client libpq-dev
     - CI_PIPELINE=true ./scripts/init_db.sh
     - cargo test
 
