@@ -60,7 +60,7 @@ if [ -z "${CI_PIPELINE}" ]
 then
   DATABASE_URL=postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}
 else
-  DATABASE_URL=postgres://${DB_USER}:${DB_PASSWORD}@${DB_PORT}/${DB_NAME}
+  DATABASE_URL=postgres://${DB_USER}:${DB_PASSWORD}@postgres:5432/${DB_NAME}
 fi
 export DATABASE_URL
 
