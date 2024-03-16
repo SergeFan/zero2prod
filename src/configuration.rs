@@ -1,6 +1,4 @@
 //! src/configuration.rs
-use std::env;
-
 #[derive(serde::Deserialize)]
 pub struct Settings {
     pub database: DatabaseSettings,
@@ -18,23 +16,17 @@ pub struct DatabaseSettings {
 
 impl DatabaseSettings {
     pub fn connection_string(&self) -> String {
-        let database_host = env::var("DB_HOST").unwrap_or(format!("{}:{}", self.host, self.port));
-        let database_name = env::var("DB_NAME").unwrap_or(self.database_name.clone());
-        let database_user =
-            env::var("DB_USER").unwrap_or(format!("{}:{}", self.username, self.password));
-
         format!(
-            "postgres://{}@{}/{}",
-            database_user, database_host, database_name
+            "postgres://{}:{}@{}:{}/{}",
+            self.username, self.password, self.host, self.port, self.database_name
         )
     }
 
     pub fn connection_string_without_db(&self) -> String {
-        let database_host = env::var("DB_HOST").unwrap_or(format!("{}:{}", self.host, self.port));
-        let database_user =
-            env::var("DB_USER").unwrap_or(format!("{}:{}", self.username, self.password));
-
-        format!("postgres://{}@{}", database_user, database_host)
+        format!(
+            "postgres://{}:{}@{}:{}",
+            self.username, self.password, self.host, self.port
+        )
     }
 }
 
@@ -45,6 +37,7 @@ pub fn get_configuration() -> Result<Settings, config::ConfigError> {
             "configuration.yaml",
             config::FileFormat::Yaml,
         ))
+        .add_source(config::Environment::with_prefix("Z2P").separator("__"))
         .build()?;
 
     // Try to convert the configuration values it read into Setting type
