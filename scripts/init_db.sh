@@ -49,8 +49,6 @@ until
   if [ -z "${CI_PIPELINE}" ]
   then
     psql -h "${DB_HOST}" -U "${DB_USER}" -p "${DB_PORT}" -d "postgres" -c '\q'
-  else
-    psql -h "postgres" -U "runner" -d "$POSTGRES_DB" -c "SELECT 'OK' AS status;"
   fi
 do
   >&2 echo "Postgres is still unavailable - sleeping"
