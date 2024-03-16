@@ -48,9 +48,9 @@ export PGPASSWORD="${DB_PASSWORD}"
 until
   if [ -z "${SKIP_DOCKER}" ]
   then
-    psql -h "${DB_HOST}" -U "${DB_USER}" -p "${DB_PORT}" -d "postgres" -c '\q'
+    psql -h "${DB_HOST}" -U "${DB_USER}" -p "${DB_PORT}" -d "${DB_NAME}" -c '\q'
   else
-    psql -h "${DB_HOST}" -U "${DB_USER}" -d "postgres" -c '\q'
+    psql -h "${DB_HOST}" -U "${DB_USER}" -d "${DB_NAME}" -c '\q'
   fi
 do
   >&2 echo "Postgres is still unavailable - sleeping"
