@@ -50,7 +50,7 @@ until
   then
     psql -h "${DB_HOST}" -U "${DB_USER}" -p "${DB_PORT}" -d "${DB_NAME}" -c '\q'
   else
-    psql -h "${DB_HOST}" -U "${DB_USER}" -d "${DB_NAME}" -c '\q'
+    psql -h "postgres" -U "postgres" -d "postgres" -c "create database ${DB_NAME}"
   fi
 do
   >&2 echo "Postgres is still unavailable - sleeping"
@@ -62,7 +62,7 @@ if [ -z "${SKIP_DOCKER}" ]
 then
   DATABASE_URL=postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}
 else
-  DATABASE_URL=postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/${DB_NAME}
+  DATABASE_URL=postgres://${DB_USER}@${DB_HOST}/${DB_NAME}
 fi
 export DATABASE_URL
 
