@@ -43,19 +43,27 @@ then
     # ^ Increased maximum number of connections for testing purposes
 fi
 
-systemctl status postgres
-
 # Keep pinging Postgres until it's ready to accept commands
 export PGPASSWORD="${DB_PASSWORD}"
 until
+  if [ -z "${SKIP_DOCKER}" ]
+  then
     psql -h "${DB_HOST}" -U "${DB_USER}" -p "${DB_PORT}" -d "postgres" -c '\q'
+  else
+    psql -h "${DB_HOST}" -U "${DB_USER}" -d "postgres" -c '\q'
+  fi
 do
   >&2 echo "Postgres is still unavailable - sleeping"
   sleep 1
 done
->&2 echo "Postgres is up and running on port ${DB_PORT}!"
+>&2 echo "Postgres is up and running!"
 
-DATABASE_URL=postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}
+if [ -z "${SKIP_DOCKER}" ]
+then
+  DATABASE_URL=postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}
+else
+  DATABASE_URL=postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/${DB_NAME}
+fi
 export DATABASE_URL
 
 sqlx database create

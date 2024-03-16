@@ -1,4 +1,6 @@
 //! src/configuration.rs
+use std::env;
+
 #[derive(serde::Deserialize)]
 pub struct Settings {
     pub database: DatabaseSettings,
@@ -16,16 +18,22 @@ pub struct DatabaseSettings {
 
 impl DatabaseSettings {
     pub fn connection_string(&self) -> String {
+        let database_host =
+            env::var("POSTGRES_HOST").unwrap_or(format!("{}:{}", self.host, self.port));
+
         format!(
-            "postgres://{}:{}@{}:{}/{}",
-            self.username, self.password, self.host, self.port, self.database_name
+            "postgres://{}:{}@{}/{}",
+            self.username, self.password, database_host, self.database_name
         )
     }
 
     pub fn connection_string_without_db(&self) -> String {
+        let database_host =
+            env::var("POSTGRES_HOST").unwrap_or(format!("{}:{}", self.host, self.port));
+
         format!(
-            "postgres://{}:{}@{}:{}",
-            self.username, self.password, self.host, self.port
+            "postgres://{}:{}@{}",
+            self.username, self.password, database_host
         )
     }
 }
