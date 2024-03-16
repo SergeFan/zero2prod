@@ -20,8 +20,6 @@ default:
   image: rust:latest
   services:
     - postgres:14
-  before_script:
-    - bundle install
 
 variables:
   POSTGRES_DB: postgres
@@ -51,8 +49,8 @@ unit-test-job: # This job runs in the test stage.
 lint-test-job: # This job also runs in the test stage.
   stage: test    # It can run at the same time as unit-test-job (in parallel).
   script:
-    - cargo install sqlx-cli --version=$SQLX_VERSION --features $SQLX_FEATURES --no-default-features --locked
     - SKIP_DOCKER=true ./scripts/init_db.sh
+    - cargo install sqlx-cli --version=$SQLX_VERSION --features $SQLX_FEATURES --no-default-features --locked
     - rustup component add clippy
     - cargo clippy -- -D warnings
 
