@@ -42,15 +42,15 @@ reformat-job:
 unit-test-job: # This job runs in the test stage.
   stage: test    # It only starts when the job in the build stage completes successfully.
   script:
-    - CI_PIPELINE=true ./scripts/init_db.sh
     - cargo install sqlx-cli --version=$SQLX_VERSION --features $SQLX_FEATURES --no-default-features --locked
+    - CI_PIPELINE=true ./scripts/init_db.sh
     - cargo test
 
 lint-test-job: # This job also runs in the test stage.
   stage: test    # It can run at the same time as unit-test-job (in parallel).
   script:
-    - CI_PIPELINE=true ./scripts/init_db.sh
     - cargo install sqlx-cli --version=$SQLX_VERSION --features $SQLX_FEATURES --no-default-features --locked
+    - CI_PIPELINE=true ./scripts/init_db.sh
     - rustup component add clippy
     - cargo clippy -- -D warnings
 
