@@ -18,8 +18,6 @@
 
 default:
   image: rust:latest
-  services:
-    - postgres:latest
 
 variables:
   POSTGRES_HOST: postgres
@@ -41,20 +39,24 @@ reformat-job:
 
 unit-test-job: # This job runs in the test stage.
   stage: test    # It only starts when the job in the build stage completes successfully.
+  services:
+    - postgres:latest
   variables:
     PIPELINE__DATABASE__HOST: $POSTGRES_HOST
   script:
     - cargo install sqlx-cli --version='~0.7' --features rustls,postgres --no-default-features --locked
     - apt-get update -yq && apt-get install -yq postgresql postgresql-client libpq-dev
-    - SKIP_DOCKER=true ./scripts/init_db.sh
+    - source SKIP_DOCKER=true ./scripts/init_db.sh
     - cargo test
 
 lint-test-job: # This job also runs in the test stage.
   stage: test    # It can run at the same time as unit-test-job (in parallel).
+  services:
+    - postgres:latest
   script:
     - cargo install sqlx-cli --version='~0.7' --features rustls,postgres --no-default-features --locked
     - apt-get update -yq && apt-get install -yq postgresql postgresql-client libpq-dev
-    - SKIP_DOCKER=true ./scripts/init_db.sh
+    - source SKIP_DOCKER=true ./scripts/init_db.sh
     - rustup component add clippy
     - cargo clippy -- -D warnings
 
