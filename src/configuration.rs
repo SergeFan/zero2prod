@@ -37,8 +37,10 @@ pub fn get_configuration() -> Result<Settings, config::ConfigError> {
             "configuration.yaml",
             config::FileFormat::Yaml,
         ))
-        // .add_source(config::Environment::with_prefix("Z2P").separator("__"))
+        .add_source(config::Environment::with_prefix("PIPELINE").separator("__"))
         .build()?;
+
+    println!("{:?}", settings.get::<String>("database.host"));
 
     // Try to convert the configuration values it read into Setting type
     settings.try_deserialize::<Settings>()

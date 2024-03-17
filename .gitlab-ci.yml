@@ -27,8 +27,7 @@ variables:
   POSTGRES_PASSWORD: password
   POSTGRES_DB: newsletter
   POSTGRES_PORT: 5432
-  DATABASE_URL: "postgres://$POSTGRES_USER:$POSTGRES_PASSWORD@$POSTGRES_HOST:$POSTGRES_PORT_PORT/$POSTGRES_DB"
-  Z2P__DATABASE__HOST: $POSTGRES_HOST
+#  DATABASE_URL: "postgres://$POSTGRES_USER:$POSTGRES_PASSWORD@$POSTGRES_HOST:$POSTGRES_PORT_PORT/$POSTGRES_DB"
 
 stages: # List of stages for jobs, and their order of execution
   - test
@@ -42,6 +41,8 @@ reformat-job:
 
 unit-test-job: # This job runs in the test stage.
   stage: test    # It only starts when the job in the build stage completes successfully.
+  variables:
+    PIPELINE__DATABASE__HOST: $POSTGRES_HOST
   script:
     - cargo install sqlx-cli --version='~0.7' --features rustls,postgres --no-default-features --locked
     - apt-get update -yq && apt-get install -yq postgresql postgresql-client libpq-dev
