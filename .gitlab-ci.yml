@@ -14,12 +14,16 @@ stages: # List of stages for jobs, and their order of execution
 
 reformat-job:
   stage: .pre
+  rules:
+    - when: manual
   script:
     - rustup component add rustfmt
     - cargo fmt -- --check
 
 unit-test-job: # This job runs in the test stage.
   stage: test    # It only starts when the job in the build stage completes successfully.
+  rules:
+    - when: manual
   services:
     - postgres:latest
   variables:
@@ -33,6 +37,8 @@ unit-test-job: # This job runs in the test stage.
 
 lint-test-job: # This job also runs in the test stage.
   stage: test    # It can run at the same time as unit-test-job (in parallel).
+  rules:
+    - when: manual
   services:
     - postgres:latest
   script:
@@ -50,6 +56,8 @@ lint-test-job: # This job also runs in the test stage.
 
 deploy-job: # This job runs in the deployment stage.
   stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
+  rules:
+    - when: manual
   environment: production
   script:
     - echo "Deploying application..."
