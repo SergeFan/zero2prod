@@ -5,7 +5,7 @@ use secrecy::ExposeSecret;
 use sqlx::{Connection, Executor, PgConnection, PgPool};
 use uuid::Uuid;
 
-use zero2prod::configuration::{get_configuration, DatabaseSettings};
+use zero2prod::configuration::{DatabaseSettings, get_configuration};
 use zero2prod::startup::run;
 use zero2prod::telemetry::{get_subscriber, init_subscriber};
 
@@ -64,7 +64,7 @@ async fn spawn_app() -> TestApp {
 pub async fn configure_database(config: &DatabaseSettings) -> PgPool {
     // Create databse
     let mut connection =
-        PgConnection::connect(&config.connection_string_without_db().expose_secret())
+        PgConnection::connect(config.connection_string_without_db().expose_secret())
             .await
             .expect("Failed to connect to Postgres.");
 
@@ -74,7 +74,7 @@ pub async fn configure_database(config: &DatabaseSettings) -> PgPool {
         .expect("Failed to create database");
 
     // Migrate database
-    let connection_pool = PgPool::connect(&config.connection_string().expose_secret())
+    let connection_pool = PgPool::connect(config.connection_string().expose_secret())
         .await
         .expect("Failed to connect to Postgres");
 
@@ -115,7 +115,7 @@ async fn test_successful_subscription() {
     // The `Connection` traits MUST be in scope to invoke
     // `PgConnection::connect` - it is not an inherent method of the struct
     let _connection =
-        PgConnection::connect(&configuration.database.connection_string().expose_secret())
+        PgConnection::connect(configuration.database.connection_string().expose_secret())
             .await
             .expect("Failed to connect to Postgres");
     let client = reqwest::Client::new();
