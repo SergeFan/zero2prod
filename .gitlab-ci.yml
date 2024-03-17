@@ -28,6 +28,7 @@ unit-test-job: # This job runs in the test stage.
     - cargo install sqlx-cli --version='~0.7' --features rustls,postgres --no-default-features --locked
     - apt-get update -yq && apt-get install -yq postgresql postgresql-client libpq-dev
     - SKIP_DOCKER=true source ./scripts/init_db.sh
+    - cargo sqlx prepare --workspace --check
     - cargo test
 
 lint-test-job: # This job also runs in the test stage.

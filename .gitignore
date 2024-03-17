@@ -3,6 +3,3 @@
 
 # Binary output
 /target
-
-# sqlx cache
-.sqlx

@@ -1,10 +1,11 @@
 use std::net::TcpListener;
 
 use once_cell::sync::Lazy;
+use secrecy::ExposeSecret;
 use sqlx::{Connection, Executor, PgConnection, PgPool};
 use uuid::Uuid;
 
-use zero2prod::configuration::{get_configuration, DatabaseSettings};
+use zero2prod::configuration::{DatabaseSettings, get_configuration};
 use zero2prod::startup::run;
 use zero2prod::telemetry::{get_subscriber, init_subscriber};
 
@@ -62,9 +63,10 @@ async fn spawn_app() -> TestApp {
 
 pub async fn configure_database(config: &DatabaseSettings) -> PgPool {
     // Create databse
-    let mut connection = PgConnection::connect(&config.connection_string_without_db())
-        .await
-        .expect("Failed to connect to Postgres.");
+    let mut connection =
+        PgConnection::connect(&config.connection_string_without_db().expose_secret())
+            .await
+            .expect("Failed to connect to Postgres.");
 
     connection
         .execute(format!(r#"CREATE DATABASE "{}";"#, config.database_name).as_str())
@@ -72,7 +74,7 @@ pub async fn configure_database(config: &DatabaseSettings) -> PgPool {
         .expect("Failed to create database");
 
     // Migrate database
-    let connection_pool = PgPool::connect(&config.connection_string())
+    let connection_pool = PgPool::connect(&config.connection_string().expose_secret())
         .await
         .expect("Failed to connect to Postgres");
 
@@ -109,13 +111,13 @@ async fn test_successful_subscription() {
     // Arrange
     let app = spawn_app().await;
     let configuration = get_configuration().expect("Failed to read configuration");
-    let connection_string = configuration.database.connection_string();
 
     // The `Connection` traits MUST be in scope to invoke
     // `PgConnection::connect` - it is not an inherent method of the struct
-    let _connection = PgConnection::connect(&connection_string)
-        .await
-        .expect("Failed to connect to Postgres");
+    let _connection =
+        PgConnection::connect(&configuration.database.connection_string().expose_secret())
+            .await
+            .expect("Failed to connect to Postgres");
     let client = reqwest::Client::new();
 
     // Act
