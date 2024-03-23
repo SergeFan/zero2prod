@@ -1,7 +1,6 @@
 use std::net::TcpListener;
 
 use once_cell::sync::Lazy;
-use secrecy::ExposeSecret;
 use sqlx::{Connection, Executor, PgConnection, PgPool};
 use uuid::Uuid;
 
@@ -63,10 +62,9 @@ async fn spawn_app() -> TestApp {
 
 pub async fn configure_database(config: &DatabaseSettings) -> PgPool {
     // Create databse
-    let mut connection =
-        PgConnection::connect(config.connection_string_without_db().expose_secret())
-            .await
-            .expect("Failed to connect to Postgres.");
+    let mut connection = PgConnection::connect_with(&config.without_db())
+        .await
+        .expect("Failed to connect to Postgres.");
 
     connection
         .execute(format!(r#"CREATE DATABASE "{}";"#, config.database_name).as_str())
@@ -74,7 +72,7 @@ pub async fn configure_database(config: &DatabaseSettings) -> PgPool {
         .expect("Failed to create database");
 
     // Migrate database
-    let connection_pool = PgPool::connect(config.connection_string().expose_secret())
+    let connection_pool = PgPool::connect_with(config.with_db())
         .await
         .expect("Failed to connect to Postgres");
 
@@ -114,10 +112,9 @@ async fn test_successful_subscription() {
 
     // The `Connection` traits MUST be in scope to invoke
     // `PgConnection::connect` - it is not an inherent method of the struct
-    let _connection =
-        PgConnection::connect(configuration.database.connection_string().expose_secret())
-            .await
-            .expect("Failed to connect to Postgres");
+    let _connection = PgConnection::connect_with(&configuration.database.with_db())
+        .await
+        .expect("Failed to connect to Postgres");
     let client = reqwest::Client::new();
 
     // Act
