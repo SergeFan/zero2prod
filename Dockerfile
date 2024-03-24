@@ -2,7 +2,7 @@ FROM lukemathwalker/cargo-chef:latest-rust-1.76.0 as chef
 
 WORKDIR /app
 
-RUN apt update && apt install lld clang -y
+RUN apt update && apt install mold clang -y
 
 # Planner stage
 FROM chef as planner
