@@ -1,4 +1,4 @@
-FROM lukemathwalker/cargo-chef:latest-rust-1.76.0 as chef
+FROM lukemathwalker/cargo-chef:latest-rust-1.77 as chef
 
 WORKDIR /app
 
