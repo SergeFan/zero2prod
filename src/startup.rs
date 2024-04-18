@@ -1,10 +1,13 @@
 use std::net::TcpListener;
 
 use crate::configuration::{DatabaseSettings, Settings};
+use actix_web::cookie::Key;
 use actix_web::dev::Server;
 use actix_web::web::Data;
 use actix_web::{web, App, HttpServer};
-use secrecy::Secret;
+use actix_web_flash_messages::storage::CookieMessageStore;
+use actix_web_flash_messages::FlashMessagesFramework;
+use secrecy::{ExposeSecret, Secret};
 use sqlx::postgres::PgPoolOptions;
 use sqlx::PgPool;
 use tracing_actix_web::TracingLogger;
@@ -88,8 +91,13 @@ pub fn run(
     let base_url = web::Data::new(ApplicationBaseUrl(base_url));
 
     // Capture `connection` from the surrounding environment
+    let message_store =
+        CookieMessageStore::builder(Key::from(hmac_secret.expose_secret().as_bytes())).build();
+    let message_framework = FlashMessagesFramework::builder(message_store).build();
     let server = HttpServer::new(move || {
         App::new()
+            .wrap(message_framework.clone())
+            .wrap(TracingLogger::default())
             // Middlewares are added using the `wrap` method on `App`
             .wrap(TracingLogger::default())
             .route("/", web::get().to(home))
