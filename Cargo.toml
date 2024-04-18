@@ -9,15 +9,20 @@ edition = "2021"
 actix-web = "4.5"
 anyhow = "1"
 argon2 = { version = "0.5", features = ["std"] }
+askama = "0.12"
 base64 = "0.22"
 chrono = { version = "0.4", default-features = false, features = ["clock"] }
 claims = "0.7"
 config = "0.14"
+hex = "0.4"
+htmlescape = "0.3"
+hmac = { version = "0.12", features = ["std"] }
 once_cell = "1"
 rand = { version = "0.8", features = ["std_rng"] }
 secrecy = { version = "0.8", features = ["serde"] }
 serde = { version = "1.0", features = ["derive"] }
 serde-aux = "4"
+sha2 = "0.10"
 thiserror = "1"
 tokio = { version = "1.37.0", features = ["macros", "rt-multi-thread"] }
 tracing = { version = "0.1", features = ["log"] }
@@ -26,6 +31,7 @@ tracing-bunyan-formatter = "0.3"
 tracing-log = "0.2"
 tracing-subscriber = { version = "0.3", features = ["registry", "env-filter"] }
 unicode-segmentation = "1"
+urlencoding = "2"
 uuid = { version = "1", features = ["v4"] }
 validator = "0.18"
 
