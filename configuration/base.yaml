@@ -1,5 +1,3 @@
-redis_uri: "redis://127.0.0.1:6379"
-
 application:
   base_url: "http://127.0.0.1"
   port: 8000
@@ -19,3 +17,5 @@ email_client:
   sender_email: "test@gmail.com"
   authorization_token: "secret-token"
   timeout_milliseconds: 10000
+
+redis_uri: "redis://127.0.0.1:6379"

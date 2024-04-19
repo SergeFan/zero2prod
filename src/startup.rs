@@ -115,6 +115,7 @@ async fn run(
             .route("/health_check", web::get().to(health_check))
             .route("/login", web::get().to(login_form))
             .route("/login", web::post().to(login))
+            .route("/home", web::get().to(home))
             .route("/subscriptions", web::post().to(subscribe))
             .route("/subscriptions/confirm", web::get().to(confirm))
             .route("/newsletters", web::post().to(publish_newsletter))
