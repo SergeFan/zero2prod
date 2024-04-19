@@ -1,4 +1,4 @@
-use std::fmt::{Debug, Display};
+use std::fmt::Debug;
 
 use actix_web::http::header::{ContentType, LOCATION};
 use actix_web::{web, HttpResponse};
@@ -8,18 +8,12 @@ use sqlx::PgPool;
 use uuid::Uuid;
 
 use crate::session_state::TypedSession;
+use crate::utils::e_500;
 
 #[derive(Template)]
 #[template(path = "dashboard.html")]
 struct DashboardTemplate {
     username: String,
-}
-
-fn e_500<T>(e: T) -> actix_web::Error
-where
-    T: Debug + Display + 'static,
-{
-    actix_web::error::ErrorInternalServerError(e)
 }
 
 pub async fn admin_dashboard(
