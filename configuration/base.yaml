@@ -1,6 +1,10 @@
+redis_uri: "redis://127.0.0.1:6379"
+
 application:
   base_url: "http://127.0.0.1"
   port: 8000
+  # `APP_APPLICATION__HMAC_SECRET` environment variable
+  # is also needed to be set on Digital Ocean for production
   hmac_secret: "long-and-very-secret-random-key-needed-to-verify-message-integrity"
 
 database:
