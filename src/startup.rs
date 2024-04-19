@@ -16,7 +16,7 @@ use tracing_actix_web::TracingLogger;
 
 use crate::email_client::EmailClient;
 use crate::routes::{
-    confirm, health_check, home, login, login_form, publish_newsletter, subscribe,
+    admin_dashboard, confirm, health_check, home, login, login_form, publish_newsletter, subscribe,
 };
 
 #[derive(Clone)]
@@ -112,10 +112,10 @@ async fn run(
             // Middlewares are added using the `wrap` method on `App`
             .wrap(TracingLogger::default())
             .route("/", web::get().to(home))
+            .route("/admin/dashboard", web::get().to(admin_dashboard))
             .route("/health_check", web::get().to(health_check))
             .route("/login", web::get().to(login_form))
             .route("/login", web::post().to(login))
-            .route("/home", web::get().to(home))
             .route("/subscriptions", web::post().to(subscribe))
             .route("/subscriptions/confirm", web::get().to(confirm))
             .route("/newsletters", web::post().to(publish_newsletter))

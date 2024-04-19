@@ -22,6 +22,7 @@ rand = { version = "0.8", features = ["std_rng"] }
 secrecy = { version = "0.8", features = ["serde"] }
 serde = { version = "1.0", features = ["derive"] }
 serde-aux = "4"
+serde_json = "1"
 thiserror = "1"
 tokio = { version = "1.37.0", features = ["macros", "rt-multi-thread"] }
 tracing = { version = "0.1", features = ["log"] }
@@ -31,7 +32,7 @@ tracing-log = "0.2"
 tracing-subscriber = { version = "0.3", features = ["registry", "env-filter"] }
 unicode-segmentation = "1"
 urlencoding = "2"
-uuid = { version = "1", features = ["v4"] }
+uuid = { version = "1", features = ["v4", "serde"] }
 validator = "0.18"
 
 [dependencies.reqwest]
@@ -56,5 +57,4 @@ fake = "~2.3"
 linkify = "0.10"
 quickcheck = "0.9.2"
 quickcheck_macros = "0.9.1"
-serde_json = "1"
 wiremock = "0.6"
