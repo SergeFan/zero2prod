@@ -3,7 +3,6 @@ use argon2::password_hash::SaltString;
 use argon2::{Algorithm, Argon2, Params, PasswordHash, PasswordHasher, PasswordVerifier, Version};
 use secrecy::{ExposeSecret, Secret};
 use sqlx::PgPool;
-use sqlx::__rt::spawn_blocking;
 
 #[derive(thiserror::Error, Debug)]
 pub enum AuthError {
@@ -94,8 +93,8 @@ pub async fn change_password(
     password: Secret<String>,
     pool: &PgPool,
 ) -> Result<(), anyhow::Error> {
-    let password_hash = spawn_blocking(move || compute_password_hash(password))
-        .await
+    let password_hash = tokio::task::spawn_blocking(move || compute_password_hash(password))
+        .await?
         .context("Failed to hash password")?;
 
     sqlx::query!(
