@@ -1,10 +1,11 @@
-use crate::session_state::TypedSession;
-use crate::utils::{e_500, see_other};
+use std::fmt::Write;
+
 use actix_web::http::header::ContentType;
-use actix_web::HttpResponse;
+use actix_web::{web, HttpResponse};
 use actix_web_flash_messages::IncomingFlashMessages;
 use askama::Template;
-use std::fmt::Write;
+
+use crate::authentication::UserId;
 
 #[derive(Template)]
 #[template(path = "password.html")]
@@ -14,12 +15,8 @@ struct PasswordTemplate {
 
 pub async fn change_password_form(
     flash_messages: IncomingFlashMessages,
-    session: TypedSession,
+    _user_id: web::ReqData<UserId>,
 ) -> Result<HttpResponse, actix_web::Error> {
-    if session.get_user_id().map_err(e_500)?.is_none() {
-        return Ok(see_other("/login"));
-    }
-
     let mut error_message = String::new();
 
     for flash_message in flash_messages.iter() {

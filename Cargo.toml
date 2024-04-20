@@ -9,6 +9,7 @@ edition = "2021"
 actix-session = { version = "0.9", features = ["redis-rs-tls-session"] }
 actix-web = "4.5"
 actix-web-flash-messages = { version = "0.4", features = ["cookies"] }
+actix-web-lab = "0.20"
 anyhow = "1"
 argon2 = { version = "0.5", features = ["std"] }
 askama = "0.12"
