@@ -4,7 +4,7 @@ use actix_web::error::InternalError;
 use actix_web::http::header::LOCATION;
 use actix_web::{web, HttpResponse};
 use actix_web_flash_messages::FlashMessage;
-use secrecy::Secret;
+use secrecy::SecretString;
 use sqlx::PgPool;
 
 use crate::authentication::{validate_credentials, AuthError, Credentials};
@@ -28,7 +28,7 @@ impl Debug for LoginError {
 #[derive(serde::Deserialize)]
 pub struct FormData {
     username: String,
-    password: Secret<String>,
+    password: SecretString,
 }
 
 #[tracing::instrument(

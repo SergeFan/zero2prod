@@ -6,12 +6,12 @@ use crate::authentication::reject_anonymous_users;
 use crate::configuration::{DatabaseSettings, Settings};
 use actix_web::cookie::Key;
 use actix_web::dev::Server;
+use actix_web::middleware::from_fn;
 use actix_web::web::Data;
 use actix_web::{web, App, HttpServer};
 use actix_web_flash_messages::storage::CookieMessageStore;
 use actix_web_flash_messages::FlashMessagesFramework;
-use actix_web_lab::middleware::from_fn;
-use secrecy::{ExposeSecret, Secret};
+use secrecy::{ExposeSecret, SecretString};
 use sqlx::postgres::PgPoolOptions;
 use sqlx::PgPool;
 use tracing_actix_web::TracingLogger;
@@ -23,7 +23,7 @@ use crate::routes::{
 };
 
 #[derive(Clone)]
-pub struct HmacSecret(pub Secret<String>);
+pub struct HmacSecret(pub SecretString);
 
 pub struct Application {
     port: u16,
@@ -90,8 +90,8 @@ async fn run(
     db_pool: PgPool,
     email_client: EmailClient,
     base_url: String,
-    hmac_secret: Secret<String>,
-    redis_uri: Secret<String>,
+    hmac_secret: SecretString,
+    redis_uri: SecretString,
 ) -> Result<Server, anyhow::Error> {
     // Wrap the pool using web::Data, which boils down to an Arc smart pointer
     let db_pool = web::Data::new(db_pool);
