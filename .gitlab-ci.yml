@@ -31,7 +31,7 @@ unit-test-job: # This job runs in the test stage.
   script:
     - cargo install sqlx-cli --version='~0.7' --features rustls,postgres --no-default-features --locked
     - apt-get update -yq && apt-get install -yq mold clang postgresql postgresql-client libpq-dev
-    - SKIP_DOCKER=true source ./scripts/init_db.sh
+    - SKIP_DOCKER=true source ./scripts/init_postgres.sh
     - cargo sqlx prepare --workspace --check
     - cargo test
 
@@ -44,7 +44,7 @@ lint-test-job: # This job also runs in the test stage.
   script:
     - cargo install sqlx-cli --version='~0.7' --features rustls,postgres --no-default-features --locked
     - apt-get update -yq && apt-get install -yq mold clang postgresql postgresql-client libpq-dev
-    - SKIP_DOCKER=true source ./scripts/init_db.sh
+    - SKIP_DOCKER=true source ./scripts/init_postgres.sh
     - rustup component add clippy
     - cargo clippy -- -D warnings
 
