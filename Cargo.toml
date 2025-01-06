@@ -14,15 +14,15 @@ argon2 = { version = "0.5", features = ["std"] }
 askama = "0.12"
 base64 = "0.22"
 chrono = { version = "0.4", default-features = false, features = ["clock"] }
-claims = "0.7"
-config = "0.14"
+claims = "0.8"
+config = "0.15"
 rand = { version = "0.8", features = ["std_rng"] }
 secrecy = { version = "0.10", features = ["serde"] }
 serde = { version = "1.0", features = ["derive"] }
 serde-aux = "4"
-serde_json = "1"
+serde_json = "1.0"
 thiserror = "2.0"
-tokio = { version = "1.41", features = ["macros", "rt-multi-thread"] }
+tokio = { version = "1.42", features = ["macros", "rt-multi-thread"] }
 tracing = { version = "0.1", features = ["log"] }
 tracing-actix-web = "0.7"
 tracing-bunyan-formatter = "0.3"
