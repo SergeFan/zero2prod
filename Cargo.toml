@@ -50,8 +50,8 @@ features = [
 ]
 
 [dev-dependencies]
-fake = "~2.3"
+fake = "3.1"
 linkify = "0.10"
-quickcheck = "0.9.2"
-quickcheck_macros = "0.9.1"
+quickcheck = "1.0"
+quickcheck_macros = "1.0"
 wiremock = "0.6"
