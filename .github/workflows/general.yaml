@@ -54,7 +54,7 @@ jobs:
 
       - name: Migrate database
         run: |
-          SKIP_DOCKER=true ./script/init_postgres.sh
+          SKIP_DOCKER=true ./scripts/init_postgres.sh
 
       - name: Run tests
         run: cargo test
@@ -129,7 +129,7 @@ jobs:
 
       - name: Migrate database
         run: |
-          SKIP_DOCKER=true ./script/init_postgres.sh
+          SKIP_DOCKER=true ./scripts/init_postgres.sh
 
       - name: Install cargo-llvm-cov
         uses: taiki-e/install-action@cargo-llvm-cov
