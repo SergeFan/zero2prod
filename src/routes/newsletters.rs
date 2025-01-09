@@ -1,6 +1,5 @@
 use std::fmt::{Debug, Formatter};
 
-use crate::authentication::{validate_credentials, AuthError, Credentials};
 use actix_web::body::BoxBody;
 use actix_web::http::header::{HeaderMap, HeaderValue};
 use actix_web::http::{header, StatusCode};
@@ -10,6 +9,7 @@ use base64::Engine;
 use secrecy::SecretString;
 use sqlx::PgPool;
 
+use crate::authentication::{validate_credentials, AuthError, Credentials};
 use crate::domain::SubscriberEmail;
 use crate::email_client::EmailClient;
 use crate::routes::error_chain_fmt;
