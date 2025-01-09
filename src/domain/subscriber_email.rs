@@ -1,4 +1,5 @@
 use std::fmt::{Debug, Display, Formatter};
+
 use validator::ValidateEmail;
 
 #[derive(Debug)]

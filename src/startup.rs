@@ -1,9 +1,7 @@
-use actix_session::storage::RedisSessionStore;
-use actix_session::SessionMiddleware;
 use std::net::TcpListener;
 
-use crate::authentication::reject_anonymous_users;
-use crate::configuration::{DatabaseSettings, Settings};
+use actix_session::storage::RedisSessionStore;
+use actix_session::SessionMiddleware;
 use actix_web::cookie::Key;
 use actix_web::dev::Server;
 use actix_web::middleware::from_fn;
@@ -16,11 +14,10 @@ use sqlx::postgres::PgPoolOptions;
 use sqlx::PgPool;
 use tracing_actix_web::TracingLogger;
 
+use crate::authentication::reject_anonymous_users;
+use crate::configuration::{DatabaseSettings, Settings};
 use crate::email_client::EmailClient;
-use crate::routes::{
-    admin_dashboard, change_password, change_password_form, confirm, health_check, home, log_out,
-    login, login_form, publish_newsletter, subscribe,
-};
+use crate::routes::*;
 
 #[derive(Clone)]
 pub struct HmacSecret(pub SecretString);
