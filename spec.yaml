@@ -51,4 +51,4 @@ databases:
     # For production workloads at least 2 (for test purpose and keep the bill lean 1 is ok)
     num_nodes: 1
     size: db-s-dev-database
-    version: "17"
+    version: "16"
