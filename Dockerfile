@@ -1,11 +1,11 @@
-FROM lukemathwalker/cargo-chef:latest-rust as chef
+FROM lukemathwalker/cargo-chef:latest AS chef
 
 WORKDIR /app
 
 RUN apt update && apt install mold clang -y
 
 # Planner stage
-FROM chef as planner
+FROM chef AS planner
 
 COPY . .
 
@@ -24,7 +24,7 @@ RUN cargo chef cook --release --recipe-path recipe.json
 COPY . .
 
 # Enable sqlx offline mode
-ENV SQLX_OFFLINE true
+ENV SQLX_OFFLINE=true
 
 # Build binary with release profile
 RUN cargo build --release --bin zero2prod
@@ -51,7 +51,7 @@ COPY --from=builder /app/target/release/zero2prod zero2prod
 # Configuration file is also needed at runtime
 COPY configuration configuration
 
-ENV APP_ENVIRONMENT production
+ENV APP_ENVIRONMENT=production
 
 # When `docker run` is executed, launch the binary
 ENTRYPOINT ["./zero2prod"]
