@@ -8,12 +8,12 @@ services:
     # Relative to the repository root
     dockerfile_path: Dockerfile
     source_dir: .
-    gitlab:
+    github:
       branch: master
       # Deploy a new version on every commit to `master` (Continuous Deployment)
       deploy_on_push: true
       # Follow the Gitlab repo URI
-      repo: jaesonfan/backend/zero2prod
+      repo: SergeFan/zero2prod
     # Active probe used by DigitalOcean's to ensure the application is healthy
     health_check:
       # The path to the health check endpoint
