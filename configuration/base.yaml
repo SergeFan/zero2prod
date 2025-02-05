@@ -1,4 +1,5 @@
 application:
+  host: 0.0.0.0
   base_url: "http://127.0.0.1"
   port: 8000
   # `APP_APPLICATION__HMAC_SECRET` environment variable
@@ -6,7 +7,7 @@ application:
   hmac_secret: "long-and-very-secret-random-key-needed-to-verify-message-integrity"
 
 database:
-  host: "localhost"
+  host: "127.0.0.1"
   port: 5432
   username: "postgres"
   password: "password"

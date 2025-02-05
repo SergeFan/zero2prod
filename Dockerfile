@@ -24,7 +24,7 @@ RUN cargo chef cook --release --recipe-path recipe.json
 COPY . .
 
 # Enable sqlx offline mode
-ENV SQLX_OFFLINE=true
+ENV SQLX_OFFLINE true
 
 # Build binary with release profile
 RUN cargo build --release --bin zero2prod
@@ -32,7 +32,6 @@ RUN cargo build --release --bin zero2prod
 
 # Runtime stage
 FROM debian:bookworm-slim AS runtime
-LABEL authors="Jaeson Fan"
 
 WORKDIR /app
 
@@ -51,7 +50,7 @@ COPY --from=builder /app/target/release/zero2prod zero2prod
 # Configuration file is also needed at runtime
 COPY configuration configuration
 
-ENV APP_ENVIRONMENT=production
+ENV APP_ENVIRONMENT production
 
 # When `docker run` is executed, launch the binary
 ENTRYPOINT ["./zero2prod"]

@@ -5,7 +5,6 @@ use actix_session::SessionMiddleware;
 use actix_web::cookie::Key;
 use actix_web::dev::Server;
 use actix_web::middleware::from_fn;
-use actix_web::web::Data;
 use actix_web::{web, App, HttpServer};
 use actix_web_flash_messages::storage::CookieMessageStore;
 use actix_web_flash_messages::FlashMessagesFramework;
@@ -54,7 +53,7 @@ impl Application {
         );
         let listener = TcpListener::bind(address)?;
 
-        let port = listener.local_addr().unwrap().port();
+        let port = listener.local_addr()?.port();
         let server = run(
             listener,
             connection_pool,
@@ -130,7 +129,7 @@ async fn run(
             .app_data(db_pool.clone())
             .app_data(email_client.clone())
             .app_data(base_url.clone())
-            .app_data(Data::new(HmacSecret(hmac_secret.clone())))
+            .app_data(web::Data::new(HmacSecret(hmac_secret.clone())))
     })
     .listen(listener)?
     .run();
