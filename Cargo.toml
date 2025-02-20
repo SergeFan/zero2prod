@@ -16,7 +16,7 @@ base64 = "0.22"
 chrono = { version = "0.4", default-features = false, features = ["clock"] }
 claims = "0.8"
 config = "0.15"
-rand = { version = "~0.8.5", features = ["std_rng"] }
+rand = { version = "~0.8.5", features = ["std_rng"] } # TODO: wait argon2 to update its `rand` dependencies
 secrecy = { version = "0.10", features = ["serde"] }
 serde = { version = "1.0", features = ["derive"] }
 serde-aux = "4.6"
