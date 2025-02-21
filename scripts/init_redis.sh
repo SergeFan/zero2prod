@@ -2,15 +2,15 @@
 set -x
 set -eo pipefail
 
-# If a redis container is running, print instructions to kill it and exit
-RUNNING_CONTAINER=$(docker ps --filter 'name=redis' --format '{{.ID}}')
-if [[ -n $RUNNING_CONTAINER ]];
+# Launch Redis using Docker
+CONTAINER_NAME="newsletter_redis"
+
+# Stop and delete last used container
+if [[ $(! docker container ls -a | grep "${CONTAINER_NAME}") ]]
 then
-  echo >&2 "There is a redis container already running, kill it with"
-  echo >&2 "    docker kill ${RUNNING_CONTAINER}"
-  exit 1
+  docker container stop ${CONTAINER_NAME}
+  docker container rm ${CONTAINER_NAME}
 fi
 
-# Launch Redis using Docker
-docker run -p "6379:6379" -d --name "redis_$(date '+%s')" redis:7
+docker run -p "6379:6379" -d --name $CONTAINER_NAME redis:7
 >&2 echo "Redis is ready to go!"
