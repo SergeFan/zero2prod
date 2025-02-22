@@ -2,12 +2,12 @@ use std::fmt::{Debug, Formatter};
 
 use actix_web::error::InternalError;
 use actix_web::http::header::LOCATION;
-use actix_web::{web, HttpResponse};
+use actix_web::{HttpResponse, web};
 use actix_web_flash_messages::FlashMessage;
 use secrecy::SecretString;
 use sqlx::PgPool;
 
-use crate::authentication::{validate_credentials, AuthError, Credentials};
+use crate::authentication::{AuthError, Credentials, validate_credentials};
 use crate::routes::error_chain_fmt;
 use crate::session_state::TypedSession;
 

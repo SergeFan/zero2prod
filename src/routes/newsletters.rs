@@ -2,14 +2,14 @@ use std::fmt::{Debug, Formatter};
 
 use actix_web::body::BoxBody;
 use actix_web::http::header::{HeaderMap, HeaderValue};
-use actix_web::http::{header, StatusCode};
-use actix_web::{web, HttpRequest, HttpResponse, ResponseError};
-use anyhow::{anyhow, Context};
+use actix_web::http::{StatusCode, header};
+use actix_web::{HttpRequest, HttpResponse, ResponseError, web};
+use anyhow::{Context, anyhow};
 use base64::Engine;
 use secrecy::SecretString;
 use sqlx::PgPool;
 
-use crate::authentication::{validate_credentials, AuthError, Credentials};
+use crate::authentication::{AuthError, Credentials, validate_credentials};
 use crate::domain::SubscriberEmail;
 use crate::email_client::EmailClient;
 use crate::routes::error_chain_fmt;

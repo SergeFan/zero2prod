@@ -1,16 +1,16 @@
 use std::net::TcpListener;
 
-use actix_session::storage::RedisSessionStore;
 use actix_session::SessionMiddleware;
+use actix_session::storage::RedisSessionStore;
 use actix_web::cookie::Key;
 use actix_web::dev::Server;
 use actix_web::middleware::from_fn;
-use actix_web::{web, App, HttpServer};
-use actix_web_flash_messages::storage::CookieMessageStore;
+use actix_web::{App, HttpServer, web};
 use actix_web_flash_messages::FlashMessagesFramework;
+use actix_web_flash_messages::storage::CookieMessageStore;
 use secrecy::{ExposeSecret, SecretString};
-use sqlx::postgres::PgPoolOptions;
 use sqlx::PgPool;
+use sqlx::postgres::PgPoolOptions;
 use tracing_actix_web::TracingLogger;
 
 use crate::authentication::reject_anonymous_users;
