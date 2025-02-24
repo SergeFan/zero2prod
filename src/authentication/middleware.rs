@@ -1,6 +1,3 @@
-use std::fmt::{Display, Formatter};
-use std::ops::Deref;
-
 use actix_web::body::MessageBody;
 use actix_web::dev::{ServiceRequest, ServiceResponse};
 use actix_web::error::InternalError;
@@ -14,13 +11,13 @@ use crate::utils::{e_500, see_other};
 #[derive(Copy, Clone, Debug)]
 pub struct UserId(Uuid);
 
-impl Display for UserId {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+impl std::fmt::Display for UserId {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         self.0.fmt(f)
     }
 }
 
-impl Deref for UserId {
+impl std::ops::Deref for UserId {
     type Target = Uuid;
 
     fn deref(&self) -> &Self::Target {

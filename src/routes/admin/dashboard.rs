@@ -1,5 +1,3 @@
-use std::fmt::Debug;
-
 use actix_web::http::header::ContentType;
 use actix_web::{HttpResponse, web};
 use anyhow::Context;
