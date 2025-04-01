@@ -11,7 +11,7 @@ actix-web = "4.10"
 actix-web-flash-messages = { version = "0.5", features = ["cookies"] }
 anyhow = "1"
 argon2 = { version = "0.5", features = ["std"] }
-askama = "0.12"
+askama = "0.13"
 base64 = "0.22"
 chrono = { version = "0.4", default-features = false, features = ["clock"] }
 claims = "0.8"
@@ -52,6 +52,6 @@ features = [
 [dev-dependencies]
 fake = "=3.1.0"
 linkify = "0.10"
-quickcheck = "1.0"
-quickcheck_macros = "1.0"
+quickcheck = "1"
+quickcheck_macros = "1"
 wiremock = "0.6"
