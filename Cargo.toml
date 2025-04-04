@@ -10,7 +10,7 @@ actix-session = { version = "0.10", features = ["redis-session-native-tls"] }
 actix-web = "4.10"
 actix-web-flash-messages = { version = "0.5", features = ["cookies"] }
 anyhow = "1"
-argon2 = { version = "0.5", features = ["std"] }
+argon2 = { version = "=0.5.3", features = ["std"] }
 askama = "0.13"
 base64 = "0.22"
 chrono = { version = "0.4", default-features = false, features = ["clock"] }
