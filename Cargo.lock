@@ -4262,7 +4262,6 @@ dependencies = [
  "anyhow",
  "argon2",
  "askama",
- "base64 0.22.1",
  "chrono",
  "claims",
  "config",
