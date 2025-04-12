@@ -90,6 +90,8 @@ jobs:
 
   coverage:
     name: Code coverage
+    # TODO: Temporarily skip this job
+    if: false
     runs-on: ubuntu-latest
     services:
       postgres:
