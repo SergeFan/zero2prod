@@ -60,7 +60,7 @@ jobs:
         run: cargo test
 
       - name: Make sure sqlx queries are fresh
-        run: cargo sqlx prepare --workspace --check
+        run: cargo sqlx prepare --workspace --check -- --all-targets
 
   fmt:
     name: Rustfmt
