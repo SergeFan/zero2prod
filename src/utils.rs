@@ -1,7 +1,7 @@
 use std::fmt::{Debug, Display};
 
-use actix_web::http::header::LOCATION;
 use actix_web::HttpResponse;
+use actix_web::http::header::LOCATION;
 
 pub fn e400<T>(e: T) -> actix_web::Error
 where

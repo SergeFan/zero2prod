@@ -1,5 +1,5 @@
 use actix_web::http::header::ContentType;
-use actix_web::{web, HttpResponse};
+use actix_web::{HttpResponse, web};
 use anyhow::Context;
 use askama::Template;
 use sqlx::PgPool;

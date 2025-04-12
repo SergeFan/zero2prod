@@ -1,5 +1,5 @@
 use actix_web::web::ReqData;
-use actix_web::{web, HttpResponse};
+use actix_web::{HttpResponse, web};
 use actix_web_flash_messages::FlashMessage;
 use anyhow::Context;
 use sqlx::PgPool;
@@ -7,7 +7,7 @@ use sqlx::PgPool;
 use crate::authentication::UserId;
 use crate::domain::SubscriberEmail;
 use crate::email_client::EmailClient;
-use crate::idempotency::{get_saved_response, save_response, IdempotencyKey};
+use crate::idempotency::{IdempotencyKey, get_saved_response, save_response};
 use crate::utils::{e400, e500, see_other};
 
 #[derive(serde::Deserialize)]
