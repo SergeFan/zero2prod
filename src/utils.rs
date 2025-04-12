@@ -1,9 +1,16 @@
 use std::fmt::{Debug, Display};
 
-use actix_web::HttpResponse;
 use actix_web::http::header::LOCATION;
+use actix_web::HttpResponse;
 
-pub fn e_500<T>(e: T) -> actix_web::Error
+pub fn e400<T>(e: T) -> actix_web::Error
+where
+    T: Debug + Display + 'static,
+{
+    actix_web::error::ErrorBadRequest(e)
+}
+
+pub fn e500<T>(e: T) -> actix_web::Error
 where
     T: Debug + Display + 'static,
 {

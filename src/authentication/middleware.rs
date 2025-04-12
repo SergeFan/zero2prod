@@ -6,7 +6,7 @@ use actix_web::{FromRequest, HttpMessage};
 use uuid::Uuid;
 
 use crate::session_state::TypedSession;
-use crate::utils::{e_500, see_other};
+use crate::utils::{e500, see_other};
 
 #[derive(Copy, Clone, Debug)]
 pub struct UserId(Uuid);
@@ -34,7 +34,7 @@ pub async fn reject_anonymous_users(
         TypedSession::from_request(http_request, payload).await
     }?;
 
-    match session.get_user_id().map_err(e_500)? {
+    match session.get_user_id().map_err(e500)? {
         None => {
             let response = see_other("/login");
 

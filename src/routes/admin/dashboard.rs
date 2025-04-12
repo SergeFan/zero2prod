@@ -1,12 +1,12 @@
 use actix_web::http::header::ContentType;
-use actix_web::{HttpResponse, web};
+use actix_web::{web, HttpResponse};
 use anyhow::Context;
 use askama::Template;
 use sqlx::PgPool;
 use uuid::Uuid;
 
 use crate::authentication::UserId;
-use crate::utils::e_500;
+use crate::utils::e500;
 
 #[derive(Template)]
 #[template(path = "dashboard.html")]
@@ -20,7 +20,7 @@ pub async fn admin_dashboard(
 ) -> Result<HttpResponse, actix_web::Error> {
     let user_id = user_id.into_inner();
 
-    let username = get_username(*user_id, &pool).await.map_err(e_500)?;
+    let username = get_username(*user_id, &pool).await.map_err(e500)?;
 
     Ok(HttpResponse::Ok()
         .content_type(ContentType::html())

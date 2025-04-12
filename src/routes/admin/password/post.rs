@@ -1,11 +1,11 @@
-use actix_web::{HttpResponse, web};
+use actix_web::{web, HttpResponse};
 use actix_web_flash_messages::FlashMessage;
 use secrecy::{ExposeSecret, SecretString};
 use sqlx::PgPool;
 
-use crate::authentication::{AuthError, Credentials, UserId, validate_credentials};
+use crate::authentication::{validate_credentials, AuthError, Credentials, UserId};
 use crate::routes::admin::dashboard::get_username;
-use crate::utils::{e_500, see_other};
+use crate::utils::{e500, see_other};
 
 #[derive(serde::Deserialize)]
 pub struct FormData {
@@ -30,7 +30,7 @@ pub async fn change_password(
         return Ok(see_other("/admin/password"));
     }
 
-    let username = get_username(*user_id, &pool).await.map_err(e_500)?;
+    let username = get_username(*user_id, &pool).await.map_err(e500)?;
 
     let credentials = Credentials {
         username,
@@ -44,13 +44,13 @@ pub async fn change_password(
 
                 Ok(see_other("/admin/password"))
             }
-            AuthError::UnexpectedError(_) => Err(e_500(e)),
+            AuthError::UnexpectedError(_) => Err(e500(e)),
         };
     }
 
     crate::authentication::change_password(*user_id, form.0.new_password, &pool)
         .await
-        .map_err(e_500)?;
+        .map_err(e500)?;
 
     FlashMessage::error("Your password has been changed").send();
 

@@ -1,14 +1,16 @@
 use std::fmt::Write;
 
-use actix_web::HttpResponse;
 use actix_web::http::header::ContentType;
+use actix_web::HttpResponse;
 use actix_web_flash_messages::IncomingFlashMessages;
 use askama::Template;
+use uuid::Uuid;
 
 #[derive(Template)]
 #[template(path = "newsletter.html")]
 struct NewsletterTemplate {
     error_message: String,
+    idempotency_key: String,
 }
 
 pub async fn publish_newsletter_form(
@@ -20,7 +22,14 @@ pub async fn publish_newsletter_form(
         writeln!(error_message, "{}", flash_message.content()).unwrap();
     }
 
-    Ok(HttpResponse::Ok()
-        .content_type(ContentType::html())
-        .body(NewsletterTemplate { error_message }.render().unwrap()))
+    let idempotency_key = Uuid::new_v4().to_string();
+
+    Ok(HttpResponse::Ok().content_type(ContentType::html()).body(
+        NewsletterTemplate {
+            error_message,
+            idempotency_key,
+        }
+        .render()
+        .unwrap(),
+    ))
 }
