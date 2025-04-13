@@ -1,12 +1,22 @@
+use fake::Fake;
+use fake::faker::internet::en::SafeEmail;
+use fake::faker::name::en::Name;
 use std::time::Duration;
 use uuid::Uuid;
 use wiremock::matchers::{any, method, path};
-use wiremock::{Mock, ResponseTemplate};
+use wiremock::{Mock, MockBuilder, ResponseTemplate};
 
 use crate::helpers::{ConfirmationLinks, TestApp, assert_is_redirect_to, spawn_app};
 
 async fn create_unconfirmed_subscriber(app: &TestApp) -> ConfirmationLinks {
-    let body = "name=le%20guin&email=ursula_le_guin%40gmail.com";
+    // Multiple subscribers' details must be randomised to avoid conflicts
+    let name: String = Name().fake();
+    let email: String = SafeEmail().fake();
+    let body = serde_urlencoded::to_string(serde_json::json!({
+        "name": name,
+        "email": email
+    }))
+    .unwrap();
 
     let _mock_guard = Mock::given(path("/email"))
         .and(method("POST"))
@@ -16,7 +26,7 @@ async fn create_unconfirmed_subscriber(app: &TestApp) -> ConfirmationLinks {
         .mount_as_scoped(&app.email_server)
         .await;
 
-    app.post_subscriptions(body.into())
+    app.post_subscriptions(body)
         .await
         .error_for_status()
         .unwrap();
@@ -40,6 +50,10 @@ async fn create_confirmed_subscriber(app: &TestApp) {
         .unwrap()
         .error_for_status()
         .unwrap();
+}
+
+fn when_sending_an_email() -> MockBuilder {
+    Mock::given(path("/email")).and(method("POST"))
 }
 
 #[tokio::test]
@@ -218,4 +232,53 @@ async fn concurrent_form_submission_is_handled_gracefully() {
     );
 
     // Mock verifies on Drop that only **one** newsletter email has been sent
+}
+
+#[tokio::test]
+async fn transient_errors_do_not_cause_duplicate_deliveries_on_retries() {
+    // Arrange
+    let app = spawn_app().await;
+    // Two subscribers instead of one
+    create_confirmed_subscriber(&app).await;
+    create_confirmed_subscriber(&app).await;
+    app.test_user.login(&app).await;
+
+    let newsletter_request_body = serde_json::json!({
+        "title": "Newsletter title",
+        "text_content": "Newsletter body as plain text",
+        "html_content": "<p>Newsletter body as HTML</p>",
+        "idempotency_key": Uuid::new_v4().to_string()
+    });
+
+    // Part 1 - Submit newsletter form
+    // Email delivery fails for the second subscriber
+    when_sending_an_email()
+        .respond_with(ResponseTemplate::new(200))
+        .up_to_n_times(1)
+        .expect(1)
+        .mount(&app.email_server)
+        .await;
+    when_sending_an_email()
+        .respond_with(ResponseTemplate::new(500))
+        .up_to_n_times(1)
+        .expect(1)
+        .mount(&app.email_server)
+        .await;
+
+    let response = app.post_publish_newsletter(&newsletter_request_body).await;
+    assert_eq!(response.status().as_u16(), 500);
+
+    // Part 2 - Retry submitting the form
+    // Email delivery will succeed for both subscribers
+    when_sending_an_email()
+        .respond_with(ResponseTemplate::new(200))
+        .expect(1)
+        .named("Delivery retry")
+        .mount(&app.email_server)
+        .await;
+
+    let response = app.post_publish_newsletter(&newsletter_request_body).await;
+    assert_eq!(response.status().as_u16(), 303);
+
+    // Mock verifies on Drop that no duplicates have been sent
 }
