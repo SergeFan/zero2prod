@@ -1,11 +1,14 @@
-use crate::domain::SubscriberEmail;
-use crate::email_client::EmailClient;
-use sqlx::{Executor, PgPool, Postgres, Row, Transaction};
-use std::mem::take;
 use std::time::Duration;
+
+use sqlx::{Executor, PgPool, Postgres, Row, Transaction};
 use tracing::Span;
 use tracing::field::display;
 use uuid::Uuid;
+
+use crate::configuration::Settings;
+use crate::domain::SubscriberEmail;
+use crate::email_client::EmailClient;
+use crate::startup::get_connection_pool;
 
 type PgTransaction = Transaction<'static, Postgres>;
 
@@ -15,7 +18,7 @@ struct NewsletterIssue {
     html_content: String,
 }
 
-enum ExecutionOutcome {
+pub enum ExecutionOutcome {
     TaskCompleted,
     EmptyQueue,
 }
@@ -32,6 +35,14 @@ async fn worker_loop(pool: &PgPool, email_client: EmailClient) -> Result<(), any
             Ok(ExecutionOutcome::TaskCompleted) => {}
         }
     }
+}
+
+pub async fn run_worker_until_stopped(configuration: Settings) -> Result<(), anyhow::Error> {
+    let connection_pool = get_connection_pool(&configuration.database);
+
+    let email_client = configuration.email_client.client();
+
+    worker_loop(&connection_pool, email_client).await
 }
 
 #[tracing::instrument(skip_all)]
@@ -60,7 +71,7 @@ async fn get_issue(pool: &PgPool, issue_id: Uuid) -> Result<NewsletterIssue, any
     ),
     err
 )]
-async fn try_execute_task(
+pub async fn try_execute_task(
     pool: &PgPool,
     email_client: &EmailClient,
 ) -> Result<ExecutionOutcome, anyhow::Error> {
