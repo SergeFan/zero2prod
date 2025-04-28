@@ -11,14 +11,14 @@ actix-web = "4.10"
 actix-web-flash-messages = { version = "0.5", features = ["cookies"] }
 anyhow = "1"
 argon2 = { version = "=0.5.3", features = ["std"] }
-askama = "0.13"
+askama = "0.14"
 chrono = { version = "0.4", default-features = false, features = ["clock"] }
 claims = "0.8"
 config = "0.15"
 rand = { version = "=0.8.5", features = ["std_rng"] } # TODO: wait argon2 to update its `rand` dependencies
 secrecy = { version = "0.10", features = ["serde"] }
 serde = { version = "1", features = ["derive"] }
-serde-aux = "4.6"
+serde-aux = "4.7"
 serde_json = "1"
 thiserror = "2"
 tokio = { version = "1.44", features = ["macros", "rt-multi-thread"] }
